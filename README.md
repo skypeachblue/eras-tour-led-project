@@ -6,7 +6,7 @@ The IR commands in this project are based on the [pixmob-ir-reverse-engineering 
 including the file in [this issue](https://github.com/danielweidman/pixmob-ir-reverse-engineering/issues/13).
 
 ### Hardware
-* [Seeed Studio XIAO ESP32C3]([https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/](https://www.mouser.de/ProductDetail/Seeed-Studio/113991054?qs=3Rah4i%252BhyCHVBerMrpzCkw%3D%3D))
+* [Seeed Studio XIAO ESP32C3](https://www.mouser.de/ProductDetail/Seeed-Studio/113991054?qs=3Rah4i%252BhyCHVBerMrpzCkw%3D%3D)
 * [Vishay TSOP4436 IR Receiver](https://www.mouser.de/ProductDetail/Vishay-Semiconductors/TSOP4436?qs=9Cg39qEKpi4wCNZSvf6qEw%3D%3D)
 * [Adafruit Mini Skinny NeoPixel RGB LED Strip](https://www.mouser.de/ProductDetail/Adafruit/2953?qs=ivJcBTDythWo3KcYUoUS1A%3D%3D)
 
