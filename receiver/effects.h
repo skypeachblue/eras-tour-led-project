@@ -1,12 +1,14 @@
 #pragma once
 
 #include <Adafruit_NeoPixel.h>
+#include <Arduino.h>
+#include <IRremote.hpp>
 
 // Rb = 1.5k
 // Rled = 47
 
 #define NEOPIXEL_PIN D7
-#define NUMPIXELS 16
+#define NUMPIXELS 17
 #define DELAYVAL 100
 const uint16_t IR_RECEIVE_PIN = D10;
 int num_base_colors = 67;
@@ -15,31 +17,31 @@ int num_special_effects = 45;
 
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-uint32_t RED = pixels.Color(50, 0, 0);
-uint32_t REDORANGE = pixels.Color(50, 5, 0);
-uint32_t ORANGE = pixels.Color(50, 20, 0);
-uint32_t YELLOWORANGE = pixels.Color(50, 25, 0);
-uint32_t YELLOW = pixels.Color(50, 50, 0);
-uint32_t YELLOWGREEN = pixels.Color(30, 50, 0);
-uint32_t GREEN = pixels.Color(0, 35, 0);
-uint32_t LIGHT_GREEN = pixels.Color(20, 45, 2);
-uint32_t TURQUOISE = pixels.Color(0, 50, 40);
-uint32_t LIGHT_BLUE = pixels.Color(1, 30, 40);
-uint32_t BLUE = pixels.Color(0, 0, 45);
-uint32_t BLURPLE = pixels.Color(30, 0, 50);
-uint32_t PURPLE = pixels.Color(50, 0, 40);
-uint32_t MAGENTA = pixels.Color(50, 8, 15);
-uint32_t PINK = pixels.Color(50, 4, 4);
-uint32_t ROSE = pixels.Color(30, 4, 4);
-uint32_t DIM_RED = pixels.Color(25, 0, 0);
-uint32_t DIM_ORANGE = pixels.Color(25, 3, 0);
-uint32_t DIM_BLUE = pixels.Color(0, 0, 20);
-uint32_t DIM_GREEN = pixels.Color(0, 20, 0);
-uint32_t DIM_PURPLE = pixels.Color(25, 8, 20);
-uint32_t DIM_TURQUOISE = pixels.Color(0, 25, 20);
-uint32_t DIM_PINK = pixels.Color(25, 8, 15);
-uint32_t WARM_WHITE = pixels.Color(40, 30, 15);
-uint32_t COOL_WHITE = pixels.Color(30, 30, 30);
+uint32_t RED = pixels.Color(75, 0, 0);
+uint32_t REDORANGE = pixels.Color(75, 8, 0);
+uint32_t ORANGE = pixels.Color(75, 30, 0);
+uint32_t YELLOWORANGE = pixels.Color(75, 50, 0);
+uint32_t YELLOW = pixels.Color(75, 75, 0);
+uint32_t YELLOWGREEN = pixels.Color(45, 75, 0);
+uint32_t GREEN = pixels.Color(0, 52, 0);
+uint32_t LIGHT_GREEN = pixels.Color(30, 67, 3);
+uint32_t TURQUOISE = pixels.Color(0, 75, 60);
+uint32_t LIGHT_BLUE = pixels.Color(2, 45, 60);
+uint32_t BLUE = pixels.Color(0, 0, 67);
+uint32_t BLURPLE = pixels.Color(45, 0, 75);
+uint32_t PURPLE = pixels.Color(75, 0, 60);
+uint32_t MAGENTA = pixels.Color(75, 12, 22);
+uint32_t PINK = pixels.Color(75, 6, 6);
+uint32_t ROSE = pixels.Color(45, 6, 6);
+uint32_t DIM_RED = pixels.Color(36, 0, 0);
+uint32_t DIM_ORANGE = pixels.Color(37, 5, 0);
+uint32_t DIM_BLUE = pixels.Color(0, 0, 30);
+uint32_t DIM_GREEN = pixels.Color(0, 30, 0);
+uint32_t DIM_PURPLE = pixels.Color(37, 12, 30);
+uint32_t DIM_TURQUOISE = pixels.Color(0, 37, 30);
+uint32_t DIM_PINK = pixels.Color(37, 12, 22);
+uint32_t WARM_WHITE = pixels.Color(60, 45, 22);
+uint32_t COOL_WHITE = pixels.Color(45, 45, 45);
 
 struct ColorEffect {
   uint64_t cmd;
