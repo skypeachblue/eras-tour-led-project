@@ -2,6 +2,7 @@
 #include <IRremote.hpp>
 #include "effects.h"
 
+// stolen from https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h#L370
 void rainbow(uint16_t first_hue, int8_t reps,
   uint8_t saturation, uint8_t brightness, bool gammify) {
   for (uint16_t i=0; i<NUMPIXELS; i++) {
@@ -64,41 +65,18 @@ void setup() {
   pixels.clear();
 
   // start up effect
-  /*
-  for (int p=0; p<NUMPIXELS; p++) {
-    pixels.setPixelColor(p, WHITE);
-    delay(50);
-    pixels.show();
-  }
-
-  delay(100);
-  pixels.clear();
-  pixels.show();
-  */
   rainbow(0, 1, 255, 50, true);
 }
 
 void loop() {
-  //IrReceiver.restartAfterSend();
-
   // wait until we receive a signal
   while (!IrReceiver.decode());
-  Serial.println("received");
   IrReceiver.printIRResultRawFormatted(&Serial, true);
 
   // check for buffer overflow
   if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
-    Serial.println("Try to increase the \"RAW_BUFFER_LENGTH\"");
-    for (int p=0; p<NUMPIXELS; p++) {
-      pixels.setPixelColor(p, RED);
-      delay(100);
-      pixels.show();
-    }
-    delay(100);
-    pixels.clear();
-    pixels.show();
     IrReceiver.resume();
-    // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
+    return;
   } else {
     // convert the run legths of the signal into an uint64_t
     String s = "";
@@ -117,9 +95,9 @@ void loop() {
       }
       one_or_zero = !one_or_zero;
     }
+    IrReceiver.resume();
     Serial.println(s);
     Serial.printf("\nbit len: %d\n", bit_len);
-    IrReceiver.resume();
     bool performed_command = false;
 
     // check if we received a known command
@@ -184,7 +162,11 @@ void loop() {
           }
         }
       }
-    }
+    // received the last signal at the eras tour :(
+    } else if (bit_len == 41) {
+        rainbow(0, 1, 255, 50, true); // last signal
+        performed_command = true;
+      }
 
     if (!performed_command) {
       Serial.println("UNKNOWN COMMAND");

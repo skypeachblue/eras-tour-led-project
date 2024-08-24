@@ -9,28 +9,37 @@
 #define NUMPIXELS 16
 #define DELAYVAL 100
 const uint16_t IR_RECEIVE_PIN = D10;
-int num_base_colors = 40;
+int num_base_colors = 67;
 int num_tail_codes = 14;
-int num_special_effects = 44;
+int num_special_effects = 45;
 
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 uint32_t RED = pixels.Color(50, 0, 0);
-uint32_t DIM_RED = pixels.Color(25, 0, 0);
-uint32_t PINK = pixels.Color(50, 15, 40);
-uint32_t BLUE = pixels.Color(0, 0, 45);
-uint32_t DIM_BLUE = pixels.Color(0, 0, 25);
-uint32_t LIGHT_BLUE = pixels.Color(1, 30, 40);
-uint32_t TURQUOISE = pixels.Color(0, 50, 40);
-uint32_t GREEN = pixels.Color(0, 35, 0);
-uint32_t DIM_GREEN = pixels.Color(0, 20, 0);
-uint32_t LIGHT_GREEN = pixels.Color(20, 45, 2);
-uint32_t YELLOWGREEN = pixels.Color(20, 50, 0);
-uint32_t YELLOW = pixels.Color(50, 50, 0);
-uint32_t YELLOWORANGE = pixels.Color(50, 40, 0);
-uint32_t ORANGE = pixels.Color(50, 20, 0);
 uint32_t REDORANGE = pixels.Color(50, 5, 0);
-uint32_t WHITE = pixels.Color(40, 40, 25);
+uint32_t ORANGE = pixels.Color(50, 20, 0);
+uint32_t YELLOWORANGE = pixels.Color(50, 25, 0);
+uint32_t YELLOW = pixels.Color(50, 50, 0);
+uint32_t YELLOWGREEN = pixels.Color(30, 50, 0);
+uint32_t GREEN = pixels.Color(0, 35, 0);
+uint32_t LIGHT_GREEN = pixels.Color(20, 45, 2);
+uint32_t TURQUOISE = pixels.Color(0, 50, 40);
+uint32_t LIGHT_BLUE = pixels.Color(1, 30, 40);
+uint32_t BLUE = pixels.Color(0, 0, 45);
+uint32_t BLURPLE = pixels.Color(30, 0, 50);
+uint32_t PURPLE = pixels.Color(50, 0, 40);
+uint32_t MAGENTA = pixels.Color(50, 8, 15);
+uint32_t PINK = pixels.Color(50, 4, 4);
+uint32_t ROSE = pixels.Color(30, 4, 4);
+uint32_t DIM_RED = pixels.Color(25, 0, 0);
+uint32_t DIM_ORANGE = pixels.Color(25, 3, 0);
+uint32_t DIM_BLUE = pixels.Color(0, 0, 20);
+uint32_t DIM_GREEN = pixels.Color(0, 20, 0);
+uint32_t DIM_PURPLE = pixels.Color(25, 8, 20);
+uint32_t DIM_TURQUOISE = pixels.Color(0, 25, 20);
+uint32_t DIM_PINK = pixels.Color(25, 8, 15);
+uint32_t WARM_WHITE = pixels.Color(40, 30, 15);
+uint32_t COOL_WHITE = pixels.Color(30, 30, 30);
 
 struct ColorEffect {
   uint64_t cmd;
@@ -53,6 +62,36 @@ struct SpecialEffect {
 };
 
 ColorEffect base_colors[] = {
+  // base colors used at the eras tour
+  (ColorEffect) {365628796241, WARM_WHITE, "WARM_WHITE"},
+  (ColorEffect) {370997269849, COOL_WHITE, "COOL_WHITE"},
+  (ColorEffect) {353816456289, RED, "RED"},
+  (ColorEffect) {358110833761, REDORANGE, "REDORANGE"},
+  (ColorEffect) {350594902369, ORANGE, "ORANGE"},
+  (ColorEffect) {350594116961, YELLOWORANGE, "YELLOWORANGE"},
+  (ColorEffect) {346300984673, YELLOW, "YELLOW"},
+  (ColorEffect) {350595950945, YELLOWGREEN, "YELLOWGREEN"},
+  (ColorEffect) {358112339297, GREEN, "GREEN"},
+  (ColorEffect) {346301421641, LIGHT_GREEN, "LIGHTGREEN"},
+  (ColorEffect) {346301420625, LIGHT_GREEN, "CYAN1"},
+  (ColorEffect) {346301417561, TURQUOISE, "CYAN2"},
+  (ColorEffect) {350594114921, LIGHT_BLUE, "CYAN3"},
+  (ColorEffect) {350596208985, BLUE, "BLUE"},
+  (ColorEffect) {350595156313, BLURPLE, "BLURPLE"},
+  (ColorEffect) {350596213097, PURPLE, "PURPLE1"},
+  (ColorEffect) {358112401481, PURPLE, "PURPLE2"},
+  (ColorEffect) {346300198217, PINK, "PINK"},
+  (ColorEffect) {358112404553, MAGENTA, "MAGENTA"},
+  (ColorEffect) {346299405649, ROSE, "ROSE1"},
+  (ColorEffect) {370995145801, DIM_ORANGE, "DIM_ORANGE"},
+  (ColorEffect) {365626764361, DIM_RED, "DIM_RED"},
+  (ColorEffect) {350594115929, DIM_BLUE, "DIM_BLUE"},
+  (ColorEffect) {346301424713, DIM_GREEN, "DIM_GREEN"},
+  (ColorEffect) {358112340313, DIM_TURQUOISE, "DIM_TURQUOISE"},
+  (ColorEffect) {350596213081, DIM_PURPLE, "DIM_PURPLE"},
+  (ColorEffect) {346299067481, DIM_PINK, "DIM_PINK"},
+  // other colors from pixmob-ir-reverse-engineering
+  // which the bracelet responded to
   (ColorEffect) {434347087969, REDORANGE, "RED"},
   (ColorEffect) {434346039393, RED, "RED_4"},
   (ColorEffect) {350596212065, DIM_RED, "DIM_RED"},
@@ -85,11 +124,11 @@ ColorEffect base_colors[] = {
   (ColorEffect) {370996194401, REDORANGE, "REDORANGE_2"},
   (ColorEffect) {370997242977, YELLOWORANGE, "YELLOWORANGE"},
   (ColorEffect) {350596129889, YELLOWORANGE, "YELLOWORANGE"},
-  (ColorEffect) {350596129865, WHITE, "WHITISH"},
-  (ColorEffect) {350596129873, WHITE, "WHITISH"},
-  (ColorEffect) {435420436561, WHITE, "WHITISH"},
-  (ColorEffect) {350596129873, WHITE, "WHITISH"},
-  (ColorEffect) {350596195729, WHITE, "WHITISH"},
+  (ColorEffect) {350596129865, WARM_WHITE, "WHITISH"},
+  (ColorEffect) {350596129873, WARM_WHITE, "WHITISH"},
+  (ColorEffect) {435420436561, WARM_WHITE, "WHITISH"},
+  (ColorEffect) {350596129873, WARM_WHITE, "WHITISH"},
+  (ColorEffect) {350596195729, WARM_WHITE, "WHITISH"},
   (ColorEffect) {370997499985, TURQUOISE, "TURQUOISE"},
   (ColorEffect) {370996974673, TURQUOISE, "TURQUOISE"},
   (ColorEffect) {370996975689, TURQUOISE, "TURQUOISE"},
@@ -97,10 +136,10 @@ ColorEffect base_colors[] = {
 
 TailEffect tail_codes[] = {
   (TailEffect) {1476705, 1200, true,  "FADE_1"},
-  (TailEffect) {2533473, 800, true,  "FADE_2"},
-  (TailEffect) {1484897, 1200, true,  "FADE_3"},
-  (TailEffect) { 821857, 1200, true,  "FADE_4"},
-  (TailEffect) {1480801, 1200, true,  "FADE_5"},
+  (TailEffect) {2533473, 900, true,  "FADE_2"},
+  (TailEffect) {1484897, 1500, true,  "FADE_3"},
+  (TailEffect) { 821857, 1300, true,  "FADE_4"},
+  (TailEffect) {1480801, 1300, true,  "FADE_5"},
   (TailEffect) {2529377, 500, true,  "FADE_6"},
   (TailEffect) { 266337, 300, false, "SHARP_PROBABILISTIC_1"},
   (TailEffect) { 268385, 300, false, "SHARP_PROBABILISTIC_2"},
@@ -113,15 +152,19 @@ TailEffect tail_codes[] = {
 };
 
 SpecialEffect special_effects[] = {
-  (SpecialEffect) {5287547451109086305, WHITE, 200, false},
-  (SpecialEffect) {5882022601598605409, WHITE, 200, true},
+  (SpecialEffect) {1879741965961, RED, 200, false}, // last signal sent at the eras tour (41 bits)
+  // other special effects from pixmob-ir-reverse-engineering
+  // which the bracelet responded to
+  // all special effects below are 63 bits long
+  (SpecialEffect) {5287547451109086305, WARM_WHITE, 200, false},
+  (SpecialEffect) {5882022601598605409, WARM_WHITE, 200, true},
   (SpecialEffect) {5882022601867040865, YELLOW, 200, true},
   (SpecialEffect) {5882005009680996449, ORANGE, 200, true},
   (SpecialEffect) {5882022532879128673, TURQUOISE, 200, true},
   (SpecialEffect) {5882022533147564129, GREEN, 200, true},
   (SpecialEffect) {5882004940961519713, YELLOW, 200, true},
-  (SpecialEffect) {5882004957872953441, WHITE, 200, true},
-  (SpecialEffect) {5287547451109092449, WHITE, 1000, true},
+  (SpecialEffect) {5882004957872953441, WARM_WHITE, 200, true},
+  (SpecialEffect) {5287547451109092449, WARM_WHITE, 1000, true},
   (SpecialEffect) {5882009407458809953, PINK, 1000, true}, // purple fade
   (SpecialEffect) {5882010443619932257, LIGHT_BLUE, 200, false},
   (SpecialEffect) {5882009441818810465, PINK, 200, false},
@@ -129,7 +172,7 @@ SpecialEffect special_effects[] = {
   (SpecialEffect) {5881991849632766049, PINK, 200, true}, // magenta
   (SpecialEffect) {5287534256969559137, PINK, 1200, true},
   (SpecialEffect) {5287534256701123681, PINK, 1200, true},
-  (SpecialEffect) {5287534187981646945, WHITE, 1200, true},
+  (SpecialEffect) {5287534187981646945, WARM_WHITE, 1200, true},
   (SpecialEffect) {5287551780167691361, LIGHT_GREEN, 1200, true},
   (SpecialEffect) {5287551780166642785, LIGHT_GREEN, 1200, true},
   (SpecialEffect) {5287551780103211681, LIGHT_GREEN, 1000, true},
@@ -150,11 +193,11 @@ SpecialEffect special_effects[] = {
   (SpecialEffect) {5287551780103752289, LIGHT_GREEN, 1000, true},
   (SpecialEffect) {5287551780103801249, LIGHT_GREEN, 1000, true},
   (SpecialEffect) {5287551780103805345, LIGHT_GREEN, 1000, true},
-  (SpecialEffect) {5215497226768127329, WHITE, 1000, true},
-  (SpecialEffect) {5215497226902345057, WHITE, 1000, true},
+  (SpecialEffect) {5215497226768127329, WARM_WHITE, 1000, true},
+  (SpecialEffect) {5215497226902345057, WARM_WHITE, 1000, true},
   (SpecialEffect) {5215499408879949153, LIGHT_GREEN, 1000, true},
   (SpecialEffect) {5287556126610330977, GREEN, 1000, true},
-  (SpecialEffect) {5263764195354908065, WHITE, 300, false},
-  (SpecialEffect) {5263764195354912161, WHITE, 600, true},
-  (SpecialEffect) {5287547451109084257, WHITE, 700, false},
+  (SpecialEffect) {5263764195354908065, WARM_WHITE, 300, false},
+  (SpecialEffect) {5263764195354912161, WARM_WHITE, 600, true},
+  (SpecialEffect) {5287547451109084257, WARM_WHITE, 700, false},
 };
