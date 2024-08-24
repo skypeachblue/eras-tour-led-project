@@ -1,6 +1,7 @@
-#include <Arduino.h>
-#include <IRremote.hpp>
 #include "effects.h"
+#include "spiffs.h"
+
+String file = "";
 
 // stolen from https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h#L370
 void rainbow(uint16_t first_hue, int8_t reps,
@@ -20,7 +21,7 @@ void rainbow(uint16_t first_hue, int8_t reps,
 
 void set_color(uint32_t color) {
   for (int i=0; i<NUMPIXELS; i++) {
-    if (i % 2 == 0) {
+    if (i % 2 == 1) {
       pixels.setPixelColor(i, color);
     }
   }
@@ -59,10 +60,26 @@ void fade_out(uint32_t color) {
 
 void setup() {
   Serial.begin(115200);
+  while (!Serial);
+
   pinMode(IR_RECEIVE_PIN, INPUT_PULLUP);
   IrReceiver.begin(IR_RECEIVE_PIN);
   pixels.begin();
   pixels.clear();
+
+  if (!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED)) {
+    Serial.println("SPIFFS Mount Failed");
+    set_color(RED);
+    delay(100);
+  } else {
+    set_color(WARM_WHITE);
+    delay(100);
+  }
+
+  int num_of_files = get_num_of_files(SPIFFS, "/");
+  file = "/" + String(num_of_files) + ".txt";
+  Serial.println(file);
+  create_file(SPIFFS, file.c_str());
 
   // start up effect
   rainbow(0, 1, 255, 50, true);
@@ -70,7 +87,10 @@ void setup() {
 
 void loop() {
   // wait until we receive a signal
-  while (!IrReceiver.decode());
+  //while (!IrReceiver.decode());
+  if (!IrReceiver.decode()) {
+    return;
+  }
   IrReceiver.printIRResultRawFormatted(&Serial, true);
 
   // check for buffer overflow
@@ -78,12 +98,14 @@ void loop() {
     IrReceiver.resume();
     return;
   } else {
-    // convert the run legths of the signal into an uint64_t
+    // convert the run lengths of the signal into an uint64_t
     String s = "";
     bool one_or_zero = 1;
     uint64_t cmd = 0;
     int bit_len = 0;
     for (IRRawlenType i=1; i<IrReceiver.decodedIRData.rawlen; i++) {
+      // each gap is a multiple of 14 ticks
+      // we round to the closest multiple here to account for inconsistencies
       uint64_t num = int(round(IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] / 14.0f));
       bit_len += num;
       s += String(num);
@@ -93,8 +115,9 @@ void loop() {
           cmd |= (((uint64_t) 1) << j);
         }
       }
-      one_or_zero = !one_or_zero;
+      one_or_zero = !one_or_zero; // alternate between 0s and 1s
     }
+    append_uint64(SPIFFS, file.c_str(), cmd);
     IrReceiver.resume();
     Serial.println(s);
     Serial.printf("\nbit len: %d\n", bit_len);
@@ -104,7 +127,7 @@ void loop() {
     if (bit_len == 39) { // command is a base color
       // iterate through base colors
       for (int i=0; i<num_base_colors; i++) {
-        if (base_colors[i].cmd == cmd) {
+        if (base_colors[i].cmd == cmd) { // found the command in the list
           Serial.printf("BASE COLOR %d\n", i);
           pixels.clear();
           set_color(base_colors[i].color);
@@ -113,11 +136,11 @@ void loop() {
           break;
         }
       }
-    } else if (bit_len == 63) { // command is special effect or base + tail
+    } else if (bit_len == 63) { // command is special effect OR base + tail
       // iterate through special effects
       if (!performed_command) {
         for (int i=0; i<num_special_effects; i++) {
-          if (special_effects[i].cmd == cmd) {
+          if (special_effects[i].cmd == cmd) { // found the command in the list
             Serial.printf("SPECIAL %d\n", i);
             pixels.clear();
             if (special_effects[i].fade) {
@@ -142,10 +165,10 @@ void loop() {
         printf("\n%llx %llx %llx \n", cmd, base_cmd, tail_cmd);
         printf("%llu %llu\n", base_cmd, tail_cmd);
         for (int i=0; i<num_tail_codes; i++) {
-          if (tail_codes[i].cmd == tail_cmd) {
+          if (tail_codes[i].cmd == tail_cmd) { // found the tail code in the list
             Serial.printf("TAIL %d\n", i);
             for (int j=0; j<num_base_colors; j++) {
-              if (base_colors[j].cmd == base_cmd) {
+              if (base_colors[j].cmd == base_cmd) { // found the base color in the list
                 if (tail_codes[i].fade) {
                   fade_in(base_colors[j].color);
                   set_color(base_colors[j].color);
@@ -162,16 +185,20 @@ void loop() {
           }
         }
       }
+
     // received the last signal at the eras tour :(
     } else if (bit_len == 41) {
-        rainbow(0, 1, 255, 50, true); // last signal
+        rainbow(0, 1, 255, 50, true);
         performed_command = true;
-      }
+    }
 
     if (!performed_command) {
       Serial.println("UNKNOWN COMMAND");
+      append_string(SPIFFS, file.c_str(), " UNKNOWN");
     }
   }
+
+  append_string(SPIFFS, file.c_str(), "\n");
   pixels.clear();
   pixels.show();
 }
