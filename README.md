@@ -4,6 +4,9 @@ My goal here was to create an LED strip which will light up in sync with the Pix
 
 Unfortunately, I did not get the chance to actually try it out (Vienna...).
 
+https://github.com/user-attachments/assets/0c64cc5e-7798-41e2-ad05-a8513c5199d3
+
+
 The IR commands in this project are based on the [pixmob-ir-reverse-engineering](https://github.com/danielweidman/pixmob-ir-reverse-engineering) project,
 including the file in [this issue](https://github.com/danielweidman/pixmob-ir-reverse-engineering/issues/13).
 
@@ -43,3 +46,4 @@ Source: https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/
 * [Arduino-IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote) Library 4.4.0
 
 ### Usage
+TBD
