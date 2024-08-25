@@ -4,9 +4,6 @@
 #include <Arduino.h>
 #include <IRremote.hpp>
 
-// Rb = 1.5k
-// Rled = 47
-
 #define NEOPIXEL_PIN D7
 #define NUMPIXELS 17
 #define DELAYVAL 100
